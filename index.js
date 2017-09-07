@@ -50,7 +50,7 @@ router.post("/register", async (ctx, next) => {
 
 	//判断校验用户名，密码，邮箱格式
 	if (lanyanan.testUserName(user) && lanyanan.testEmail(email) && lanyanan.testPassword(password)) {
-		await querySql('select * from login').then(async function (results) {
+		await querySql('select * from t_user').then(async function (results) {
 			let isQuery = true;
 			results.map((item, index) => {
 				if (item.userName === user) {
@@ -62,7 +62,7 @@ router.post("/register", async (ctx, next) => {
 				}
 			});
 			if (isQuery) {
-				await querySql(`insert into login (userName,email,password) values ('${user}','${email}','${password}')`).then(function (results) {
+				await querySql(`insert into t_user (userName,email,password) values ('${user}','${email}','${password}')`).then(function (results) {
 					ctx.response.body = reponseData("注册成功",0);
 				});
 			}
@@ -84,7 +84,7 @@ router.post("/register", async (ctx, next) => {
 /**
  * @Author   lan
  * @DateTime 2017-08-30
- * 用户注册接口	
+ * 用户登陆接口	
  */
 router.post("/login", async (ctx, next) => {
 	//缓存传递过来的参数
@@ -93,7 +93,7 @@ router.post("/login", async (ctx, next) => {
 
 	//判断校验用户名，密码，邮箱格式
 	if (lanyanan.testUserName(username) && lanyanan.testPassword(password)) {
-		await querySql('select * from login').then(async function (results) {
+		await querySql('select * from t_user').then(async function (results) {
 			ctx.response.body = reponseData("用户名或密码错误", -1);
 			results.map((item, index) => {
 				if (item.userName === username && item.password === password) {
